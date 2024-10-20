@@ -1,5 +1,7 @@
+# Esta instancia solo la uso para ejecutar el codigo Python
+
 provider "aws" {
-  region = "us-west-1"  # Cambia la región según tus necesidades
+  region = "us-east-1"  # Región us-east-1 (Norte de Virginia)
 }
 
 # Genera un par de claves SSH
@@ -23,7 +25,7 @@ resource "local_file" "private_key" {
 
 # Security group para la instancia EC2 (opcional)
 resource "aws_security_group" "my_security_group" {
-  name        = "allow_ssh"
+  name        = "costiac_allow_ssh"
   description = "Allow SSH inbound traffic"
 
   ingress {
@@ -41,10 +43,10 @@ resource "aws_security_group" "my_security_group" {
   }
 }
 
-# Crear la instancia EC2 de tipo t2.micro
+# Crear la instancia EC2 
 resource "aws_instance" "my_ec2" {
-  ami           = "ami-0c55b159cbfafe1f0"  # ID de la AMI de Amazon Linux 2 (puedes cambiarla)
-  instance_type = "t2.micro"               # Tipo de instancia
+  ami           = "ami-0c02fb55956c7d316"
+  instance_type = "t3.medium" 
 
   # Asocia el Key Pair generado a la instancia
   key_name = aws_key_pair.deployed_key.key_name
@@ -52,9 +54,44 @@ resource "aws_instance" "my_ec2" {
   # Asocia el Security Group
   vpc_security_group_ids = [aws_security_group.my_security_group.id]
 
+  # Configura el script user_data para instalar Python y dependencias y generar logs
+  user_data = <<-EOF
+              #!/bin/bash
+
+              # Archivo de log
+              LOG_FILE="/var/log/user-data.log"
+
+              # Redirigir toda la salida a este archivo de log
+              exec > >(tee -a \$LOG_FILE /var/log/cloud-init-output.log) 2>&1
+
+              echo "User Data script started at $(date)" | tee -a \$LOG_FILE
+
+              # Actualizar paquetes del sistema
+              echo "Updating system packages..." | tee -a \$LOG_FILE
+              sudo yum update -y | tee -a \$LOG_FILE
+
+              # Instalar Python3
+              echo "Installing Python3..." | tee -a \$LOG_FILE
+              sudo yum install -y python3 | tee -a \$LOG_FILE
+
+              # Instalar pip (si es necesario)
+              echo "Installing pip..." | tee -a \$LOG_FILE
+              sudo yum install -y python3-pip | tee -a \$LOG_FILE
+
+              # Instalar boto3 (la biblioteca de AWS para Python)
+              echo "Installing boto3..." | tee -a \$LOG_FILE
+              pip3 install boto3 | tee -a \$LOG_FILE
+
+              # Instalar JQ (para manejar JSON en bash)
+              echo "Installing JQ..." | tee -a \$LOG_FILE
+              sudo yum install -y jq | tee -a \$LOG_FILE
+
+              echo "User Data script finished at $(date)" | tee -a \$LOG_FILE
+              EOF
+
   # Tags (opcional)
   tags = {
-    Name = "MyEC2Instance"
+    Name = "costiac-PythonInstance"
   }
 
   # Root block device configuration (opcional)

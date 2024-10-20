@@ -9,6 +9,9 @@ cost_table = {
     # Agregar más tipos de recursos y sus costos estimados aquí
 }
 
+# Ejecutar asi: python3 estimador.py
+
+
 def calculate_monthly_cost(resource_type, count=1):
     """Calcula el costo mensual basado en el tipo de recurso y la cantidad"""
     cost_per_unit = cost_table.get(resource_type, 0)  # Si no está en la tabla, costo es 0
