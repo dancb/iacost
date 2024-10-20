@@ -91,7 +91,7 @@ resource "aws_instance" "my_ec2" {
 
   # Tags (opcional)
   tags = {
-    Name = "costiac-PythonInstance"
+    Name = "costiac-estimator"
   }
 
   # Root block device configuration (opcional)
