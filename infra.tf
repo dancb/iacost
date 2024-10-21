@@ -124,10 +124,10 @@ resource "aws_instance" "costiac_instance_1" {
     volume_size = 8  # Tamaño predeterminado para el volumen raíz
   }
 
-  # Adjuntar el volumen EBS de 100GB
   ebs_block_device {
-    device_name = "/dev/sdh"
-    volume_id   = aws_ebs_volume.costiac_ebs_volume.id
+    device_name           = "/dev/sdh"   # El nombre del dispositivo en la instancia
+    volume_size           = 10          # Tamaño del volumen en GB
+    delete_on_termination = true         # Eliminar el volumen cuando la instancia se termine
   }
 
   # Instalar el agente SSM
