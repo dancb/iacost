@@ -1,0 +1,5 @@
+# Instrucciones para ejecutarlo:
+- Coloca el archivo plan.json en el mismo directorio donde se encuentra el script.
+
+- Ejecuta el script Python en tu máquina Linux:
+    python3 cost_estimator.py
