@@ -116,7 +116,7 @@ resource "aws_efs_mount_target" "costiac_efs_mount_target" {
 # Primera instancia EC2 con EBS
 resource "aws_instance" "costiac_instance_1" {
   ami           = "ami-0c02fb55956c7d316"  # Amazon Linux 2 AMI para us-east-1
-  instance_type = "t2.micro"
+  instance_type = "c4.8xlarge" #"t2.micro"
   subnet_id     = aws_subnet.costiac_public_subnet_1.id
   security_groups = [aws_security_group.costiac_sg.id]
 
@@ -126,7 +126,7 @@ resource "aws_instance" "costiac_instance_1" {
 
   ebs_block_device {
     device_name           = "/dev/sdh"   # El nombre del dispositivo en la instancia
-    volume_size           = 10          # Tamaño del volumen en GB
+    volume_size           = 500          # Tamaño del volumen en GB
     delete_on_termination = true         # Eliminar el volumen cuando la instancia se termine
   }
 
@@ -146,7 +146,7 @@ resource "aws_instance" "costiac_instance_1" {
 # Segunda instancia EC2 con EFS
 resource "aws_instance" "costiac_instance_2" {
   ami           = "ami-0c02fb55956c7d316"  # Amazon Linux 2 AMI para us-east-1
-  instance_type = "t2.micro"
+  instance_type = "c4.8xlarge" #"t2.micro"
   subnet_id     = aws_subnet.costiac_public_subnet_2.id
   security_groups = [aws_security_group.costiac_sg.id]
 

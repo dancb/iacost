@@ -3,3 +3,9 @@
 
 - Ejecuta el script Python en tu máquina Linux:
     python3 cost_estimator.py
+
+- Para exportar el terraform plan a un json:
+    terraform plan -out=tfplan
+    terraform show -json tfplan > plan.json
+
+- Api Pricing: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-the-aws-price-list-bulk-api.html
