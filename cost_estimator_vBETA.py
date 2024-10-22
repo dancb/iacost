@@ -63,6 +63,17 @@ def estimate_ebs_cost(resource_data):
     price_per_gb = get_aws_cost('AmazonEBS', filters)
     return price_per_gb * volume_size
 
+def estimate_elastic_ip_cost(resource_data):
+    """Calcula el costo mensual de una Elastic IP (si está presente en el plan de Terraform)"""
+
+    filters = [
+        {'Type': 'TERM_MATCH', 'Field': 'location', 'Value': US_EAST_N_VIRGINIA},
+        {'Type': 'TERM_MATCH', 'Field': 'productFamily', 'Value': 'Elastic IP'}
+    ]
+    
+    # Considera que AWS cobra solo si la EIP no está asociada a una instancia
+    return get_aws_cost('AmazonEC2', filters)
+
 def map_location_to_pricing(availability_zone):
     """Mapea el availability_zone a una región de precios"""
     region_mapping = {
@@ -91,6 +102,11 @@ def parse_terraform_plan(json_file):
                 ebs_cost = estimate_ebs_cost(resource)
                 total_cost += ebs_cost
                 print(f"Volumen EBS: ${ebs_cost:.2f} mensual")
+
+            if resource['type'] == 'aws_eip':
+                eip_cost = estimate_elastic_ip_cost(resource)
+                total_cost += eip_cost
+                print(f"Elastic IP: ${eip_cost:.2f} mensual")
         
         print(f"\nCosto total estimado: ${total_cost:.2f} mensual")
 
