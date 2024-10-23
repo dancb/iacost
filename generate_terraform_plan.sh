@@ -4,6 +4,17 @@
 PLAN_FILE="plan.tfplan"
 OUTPUT_FILE="plan.json"
 
+# Eliminar archivos si existen
+if [ -f "$PLAN_FILE" ]; then
+  echo "Eliminando archivo existente: $PLAN_FILE"
+  rm $PLAN_FILE
+fi
+
+if [ -f "$OUTPUT_FILE" ]; then
+  echo "Eliminando archivo existente: $OUTPUT_FILE"
+  rm $OUTPUT_FILE
+fi
+
 # Ejecutar terraform plan y guardar la salida en un archivo binario
 echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
 terraform plan -out=$PLAN_FILE

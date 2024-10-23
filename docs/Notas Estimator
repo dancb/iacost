@@ -9,3 +9,5 @@
     terraform show -json tfplan > plan.json
 
 - Api Pricing: https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-the-aws-price-list-bulk-api.html
+
+- IA: Dame los pasos para configurar un entorno en Ubuntu para ejecutar scripts de Python, incluyendo la instalación de paquetes como boto3
