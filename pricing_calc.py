@@ -92,6 +92,13 @@ def parse_terraform_plan(json_file):
         terraform_data = json.load(f)
 
         total_cost = 0
+
+        # Delimitador llamativo para el inicio del bloque de precios
+        print("\n" + "#" * 80)
+        print("###" + " " * 25 + "INICIO DE LOS COSTOS DE LOS RECURSOS" + " " * 25 + "###")
+        print("#" * 80)
+        print("#" * 80 + "\n")
+
         for resource in terraform_data.get('resource_changes', []):
             if resource['type'] == 'aws_instance':
                 ec2_cost = estimate_ec2_cost(resource)
@@ -107,8 +114,14 @@ def parse_terraform_plan(json_file):
                 eip_cost = estimate_elastic_ip_cost(resource)
                 total_cost += eip_cost
                 print(f"Elastic IP: ${eip_cost:.2f} mensual")
-        
+
         print(f"\nCosto total estimado: ${total_cost:.2f} mensual")
+
+        # Delimitador llamativo para el final del bloque de precios
+        print("\n" + "#" * 80)
+        print("###" + " " * 27 + "FIN DE LOS COSTOS DE LOS RECURSOS" + " " * 27 + "###")
+        print("#" * 80)
+        print("#" * 80 + "\n")
 
 if __name__ == "__main__":
     # Reemplaza con la ruta a tu archivo plan.json
