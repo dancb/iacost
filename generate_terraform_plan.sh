@@ -21,18 +21,15 @@ fi
 
 # Ejecutar terraform plan y guardar la salida en un archivo binario
 echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
-terraform plan -out="$PLAN_FILE"
-
-# Verificar si el plan.tfplan fue generado correctamente
-if [ $? -eq 0 ]; then
+if terraform plan -out="$PLAN_FILE"; then
   echo "Exportando el archivo $PLAN_FILE a formato JSON: $OUTPUT_FILE"
-  terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"
-
-  if [ $? -eq 0 ]; then
+  if terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"; then
     echo "El archivo $OUTPUT_FILE ha sido generado exitosamente."
   else
     echo "Error al convertir el archivo $PLAN_FILE a JSON."
+    exit 1
   fi
 else
   echo "Error al generar el archivo de plan de Terraform."
+  exit 1
 fi
