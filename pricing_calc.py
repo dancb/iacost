@@ -95,7 +95,7 @@ def parse_terraform_plan(json_file):
 
         # Delimitador llamativo para el inicio del bloque de precios
         print("\n" + "#" * 80)
-        print("###" + " " * 25 + "INICIO DE LOS COSTOS DE LOS RECURSOS" + " " * 25 + "###")
+        print(" " * 16 + "INICIO DE COSTOS ESTIMADOS SEGUN RECURSOS A DESPLEGAR" + " " * 16)
         print("#" * 80)
         print("#" * 80 + "\n")
 
@@ -119,7 +119,7 @@ def parse_terraform_plan(json_file):
 
         # Delimitador llamativo para el final del bloque de precios
         print("\n" + "#" * 80)
-        print("###" + " " * 27 + "FIN DE LOS COSTOS DE LOS RECURSOS" + " " * 27 + "###")
+        print(" " * 16 + "FIN DE COSTOS ESTIMADOS SEGUN RECURSOS A DESPLEGAR" + " " * 16)
         print("#" * 80)
         print("#" * 80 + "\n")
 
