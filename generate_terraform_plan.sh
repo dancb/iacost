@@ -62,7 +62,7 @@ elif grep -q "destroyed" "$CLEANED_PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
   CHANGES_DETECTED=2  # Hay recursos para destruir
 elif grep -q "will be updated" "$CLEANED_PLAN_OUTPUT_FILE"; then
-  echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
+  echo -e "\n\nHay recursos para actualizar en la infraestructura. Omitiendo ejecución del script Python.\n\n"
   CHANGES_DETECTED=3  # Hay recursos para actualizar
 else
   echo "Se detectaron cambios en la infraestructura."
