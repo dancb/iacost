@@ -46,8 +46,8 @@ echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
 terraform plan -out="$PLAN_FILE"
 
 # Mostrar el contenido del plan y guardarlo en un archivo de texto para análisis
-echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
-terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
+# echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
+# terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
 # Eliminar caracteres de color y caracteres especiales
 # Guardar la salida limpia en un archivo temporal
@@ -61,6 +61,9 @@ if grep -q "Your infrastructure matches the configuration" "$CLEANED_PLAN_OUTPUT
 elif grep -q "destroyed" "$CLEANED_PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
   CHANGES_DETECTED=2  # Hay recursos para destruir
+elif grep -q "will be updated" "$CLEANED_PLAN_OUTPUT_FILE"; then
+  echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
+  CHANGES_DETECTED=3  # Hay recursos para actualizar
 else
   echo "Se detectaron cambios en la infraestructura."
   CHANGES_DETECTED=1  # Hay cambios que no implican destrucción
