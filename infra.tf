@@ -1,6 +1,6 @@
 resource "aws_instance" "ec2_1" {
   ami           = "ami-0dba2cb6798deb6d8"
-  instance_type = "c4.8xlarge"
+  instance_type = "t3.medium"
 
   root_block_device {
     volume_size = 300
@@ -8,13 +8,13 @@ resource "aws_instance" "ec2_1" {
   }
 
   tags = {
-    Name = "Instance-C4-8xlarge"
+    Name = "Instance-t3-medium"
   }
 }
 
 resource "aws_instance" "ec2_2" {
   ami           = "ami-0dba2cb6798deb6d8"
-  instance_type = "t2.medium"
+  instance_type = "t3.large"
 
   root_block_device {
     volume_size = 5000
@@ -22,6 +22,6 @@ resource "aws_instance" "ec2_2" {
   }
 
   tags = {
-    Name = "Instance-T2-Medium"
+    Name = "Instance-t3-large"
   }
 }
