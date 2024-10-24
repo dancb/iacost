@@ -25,7 +25,3 @@ resource "aws_instance" "ec2_2" {
     Name = "Instance-T2-Medium"
   }
 }
-
-resource "aws_eip" "ec2_1_eip" {
-  instance = aws_instance.ec2_1.id
-}
