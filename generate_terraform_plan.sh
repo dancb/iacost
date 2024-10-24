@@ -13,7 +13,6 @@ CHANGES_DETECTED=0  # Inicializa una variable para detectar cambios
 # Verificar si jq está instalado, si no lo está, instalarlo
 if ! command -v jq &> /dev/null; then
   echo "jq no está instalado. Instalando jq..."
-  # Detectar si el sistema usa apt (Debian/Ubuntu) o yum (RedHat/CentOS)
   if command -v apt &> /dev/null; then
     sudo apt update && sudo apt install -y jq
   elif command -v yum &> /dev/null; then
@@ -50,24 +49,16 @@ terraform plan -out="$PLAN_FILE"
 echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
 terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
-# Imprimir el contenido del archivo de salida del plan
-echo "Contenido del archivo de salida del plan ($PLAN_OUTPUT_FILE):"
-cat "$PLAN_OUTPUT_FILE"
-
-# Verificar si el plan indica que no hay cambios o si tiene recursos a destruir
+# Verificar si el plan indica que no hay cambios o si hay recursos para destruir
 if grep -q "Your infrastructure matches the configuration" "$PLAN_OUTPUT_FILE"; then
-  echo "No hay cambios para aplicar en la infraestructura."
+  echo -e "\n\nNo hay cambios para aplicar en la infraestructura.\n\n"
   CHANGES_DETECTED=0  # No hay cambios
 elif grep -q "destroy" "$PLAN_OUTPUT_FILE"; then
-  echo "Hay recursos para destruir en la infraestructura."
-  CHANGES_DETECTED=1  # Hay cambios
+  echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
+  CHANGES_DETECTED=2  # Hay recursos para destruir
 else
   echo "Se detectaron cambios en la infraestructura."
-  CHANGES_DETECTED=1  # Hay cambios
-fi
-
-# Si hay cambios, exportar el archivo a formato JSON
-if [ $CHANGES_DETECTED -eq 1 ]; then
+  CHANGES_DETECTED=1  # Hay cambios que no implican destrucción
   echo "Exportando el archivo $PLAN_FILE a formato JSON: $OUTPUT_FILE"
   if terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"; then
     echo "El archivo $OUTPUT_FILE ha sido generado exitosamente."
