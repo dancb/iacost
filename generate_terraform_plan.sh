@@ -6,6 +6,7 @@ set -o pipefail
 
 # Variables
 PLAN_FILE="plan.tfplan"
+PLAN_OUTPUT_FILE="plan_output.txt"
 OUTPUT_FILE="plan.json"
 CHANGES_DETECTED=0  # Inicializa una variable para detectar cambios
 
@@ -36,23 +37,29 @@ if [ -f "$OUTPUT_FILE" ];then
   rm "$OUTPUT_FILE"
 fi
 
-# Ejecutar terraform plan y capturar la salida
-echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
-PLAN_OUTPUT=$(terraform plan -out="$PLAN_FILE")
+if [ -f "$PLAN_OUTPUT_FILE" ]; then
+  echo "Eliminando archivo existente: $PLAN_OUTPUT_FILE"
+  rm "$PLAN_OUTPUT_FILE"
+fi
 
-# Imprimir la salida de PLAN_OUTPUT
-echo "------------------> Resultado de terraform plan:"
-echo "$PLAN_OUTPUT"
+# Ejecutar terraform plan y guardar la salida en un archivo binario
+echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
+terraform plan -out="$PLAN_FILE"
+
+# Mostrar el contenido del plan y guardarlo en un archivo de texto para análisis
+echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
+terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
 # Verificar si el plan indica que no hay cambios
-if echo "$PLAN_OUTPUT" | grep -q "Your infrastructure matches the configuration"; then
+if grep -q "Your infrastructure matches the configuration" "$PLAN_OUTPUT_FILE"; then
   echo "No hay cambios para aplicar en la infraestructura."
   CHANGES_DETECTED=0  # No hay cambios
 else
+  echo "Se detectaron cambios en la infraestructura."
+  CHANGES_DETECTED=1  # Hay cambios
   echo "Exportando el archivo $PLAN_FILE a formato JSON: $OUTPUT_FILE"
   if terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"; then
     echo "El archivo $OUTPUT_FILE ha sido generado exitosamente."
-    CHANGES_DETECTED=1  # Hay cambios
   else
     echo "Error al convertir el archivo $PLAN_FILE a JSON."
     exit 1
