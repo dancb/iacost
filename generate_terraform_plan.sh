@@ -7,6 +7,7 @@ set -o pipefail
 # Variables
 PLAN_FILE="plan.tfplan"
 OUTPUT_FILE="plan.json"
+CHANGES_DETECTED=0  # Inicializa una variable para detectar cambios
 
 # Eliminar archivos si existen
 if [ -f "$PLAN_FILE" ]; then
@@ -25,11 +26,13 @@ if terraform plan -out="$PLAN_FILE"; then
   # Verificar si hay cambios en el plan
   if terraform show -json "$PLAN_FILE" | jq -e '.resource_changes | length == 0' > /dev/null; then
     echo "No hay cambios para aplicar en la infraestructura."
+    CHANGES_DETECTED=0  # No hay cambios
     exit 0
   else
     echo "Exportando el archivo $PLAN_FILE a formato JSON: $OUTPUT_FILE"
     if terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"; then
       echo "El archivo $OUTPUT_FILE ha sido generado exitosamente."
+      CHANGES_DETECTED=1  # Hay cambios
     else
       echo "Error al convertir el archivo $PLAN_FILE a JSON."
       exit 1
@@ -39,3 +42,6 @@ else
   echo "Error al generar el archivo de plan de Terraform."
   exit 1
 fi
+
+# Retorna el estado de cambios detectados
+exit $CHANGES_DETECTED
