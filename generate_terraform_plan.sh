@@ -45,7 +45,7 @@ echo "------------------> Resultado de terraform plan:"
 echo "$PLAN_OUTPUT"
 
 # Verificar si el plan indica que no hay cambios
-if echo "$PLAN_OUTPUT" | grep -q "No changes. Your infrastructure matches the configuration."; then
+if echo "$PLAN_OUTPUT" | grep -q "Your infrastructure matches the configuration"; then
   echo "No hay cambios para aplicar en la infraestructura."
   CHANGES_DETECTED=0  # No hay cambios
 else
