@@ -41,7 +41,7 @@ echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
 PLAN_OUTPUT=$(terraform plan -out="$PLAN_FILE")
 
 # Imprimir la salida de PLAN_OUTPUT
-echo "Resultado de terraform plan:"
+echo "------------------> Resultado de terraform plan:"
 echo "$PLAN_OUTPUT"
 
 # Verificar si el plan indica que no hay cambios
