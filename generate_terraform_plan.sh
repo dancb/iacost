@@ -46,8 +46,8 @@ echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
 terraform plan -out="$PLAN_FILE"
 
 # Mostrar el contenido del plan y guardarlo en un archivo de texto para análisis
-# echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
-# terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
+echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
+terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
 # Verificar si el plan indica que no hay cambios o si hay recursos para destruir
 if grep -q "Your infrastructure matches the configuration" "$PLAN_OUTPUT_FILE"; then
