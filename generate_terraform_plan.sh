@@ -32,7 +32,7 @@ if [ -f "$PLAN_FILE" ]; then
   rm "$PLAN_FILE"
 fi
 
-if [ -f "$OUTPUT_FILE" ];then
+if [ -f "$OUTPUT_FILE" ]; then
   echo "Eliminando archivo existente: $OUTPUT_FILE"
   rm "$OUTPUT_FILE"
 fi
@@ -50,13 +50,24 @@ terraform plan -out="$PLAN_FILE"
 echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
 terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
-# Verificar si el plan indica que no hay cambios
+# Imprimir el contenido del archivo de salida del plan
+echo "Contenido del archivo de salida del plan ($PLAN_OUTPUT_FILE):"
+cat "$PLAN_OUTPUT_FILE"
+
+# Verificar si el plan indica que no hay cambios o si tiene recursos a destruir
 if grep -q "Your infrastructure matches the configuration" "$PLAN_OUTPUT_FILE"; then
   echo "No hay cambios para aplicar en la infraestructura."
   CHANGES_DETECTED=0  # No hay cambios
+elif grep -q "destroy" "$PLAN_OUTPUT_FILE"; then
+  echo "Hay recursos para destruir en la infraestructura."
+  CHANGES_DETECTED=1  # Hay cambios
 else
   echo "Se detectaron cambios en la infraestructura."
   CHANGES_DETECTED=1  # Hay cambios
+fi
+
+# Si hay cambios, exportar el archivo a formato JSON
+if [ $CHANGES_DETECTED -eq 1 ]; then
   echo "Exportando el archivo $PLAN_FILE a formato JSON: $OUTPUT_FILE"
   if terraform show -json "$PLAN_FILE" > "$OUTPUT_FILE"; then
     echo "El archivo $OUTPUT_FILE ha sido generado exitosamente."
