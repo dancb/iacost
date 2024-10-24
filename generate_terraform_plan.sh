@@ -53,7 +53,7 @@ terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 if grep -q "Your infrastructure matches the configuration" "$PLAN_OUTPUT_FILE"; then
   echo -e "\n\nNo hay cambios para aplicar en la infraestructura.\n\n"
   CHANGES_DETECTED=0  # No hay cambios
-elif grep -q "destroy" "$PLAN_OUTPUT_FILE"; then
+elif grep -q "will be destroyed" "$PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
   CHANGES_DETECTED=2  # Hay recursos para destruir
 else
