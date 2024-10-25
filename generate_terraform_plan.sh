@@ -8,6 +8,7 @@ set -o pipefail
 PLAN_FILE="plan.tfplan"
 PLAN_OUTPUT_FILE="plan_output.txt"
 OUTPUT_FILE="plan.json"
+CLEANED_PLAN_OUTPUT_FILE="cleaned_plan_output.txt"
 CHANGES_DETECTED=0  # Inicializa una variable para detectar cambios
 
 # Verificar si jq está instalado, si no lo está, instalarlo
@@ -41,17 +42,27 @@ if [ -f "$PLAN_OUTPUT_FILE" ]; then
   rm "$PLAN_OUTPUT_FILE"
 fi
 
+if [ -f "$CLEANED_PLAN_OUTPUT_FILE" ]; then
+  echo "Eliminando archivo existente: $CLEANED_PLAN_OUTPUT_FILE"
+  rm "$CLEANED_PLAN_OUTPUT_FILE"
+fi
+
 # Ejecutar terraform plan y guardar la salida en un archivo binario
 echo "Generando el archivo de plan de Terraform: $PLAN_FILE"
 terraform plan -out="$PLAN_FILE"
 
 # Mostrar el contenido del plan y guardarlo en un archivo de texto para análisis
-# echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
+echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
 terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
+
+# Verificar que el archivo PLAN_OUTPUT_FILE existe antes de aplicar sed
+if [ ! -f "$PLAN_OUTPUT_FILE" ]; then
+  echo "Error: El archivo $PLAN_OUTPUT_FILE no se generó correctamente."
+  exit 1
+fi
 
 # Eliminar caracteres de color y caracteres especiales
 # Guardar la salida limpia en un archivo temporal
-CLEANED_PLAN_OUTPUT_FILE="cleaned_plan_output.txt"
 sed -r "s/\x1b\[[0-9;]*m//g" "$PLAN_OUTPUT_FILE" > "$CLEANED_PLAN_OUTPUT_FILE"
 
 # Verificar si el plan indica que no hay cambios o si hay recursos para destruir
