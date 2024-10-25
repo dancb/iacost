@@ -47,7 +47,7 @@ terraform plan -out="$PLAN_FILE"
 
 # Mostrar el contenido del plan y guardarlo en un archivo de texto para análisis
 # echo "Mostrando el plan de Terraform y guardándolo en $PLAN_OUTPUT_FILE"
-# terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
+terraform show "$PLAN_FILE" | tee "$PLAN_OUTPUT_FILE"
 
 # Eliminar caracteres de color y caracteres especiales
 # Guardar la salida limpia en un archivo temporal
