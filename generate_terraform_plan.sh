@@ -65,10 +65,10 @@ if grep -q "Your infrastructure matches the configuration" "$CLEANED_PLAN_OUTPUT
   CHANGES_DETECTED=0  # No hay cambios
 elif grep -q "will be destroyed" "$CLEANED_PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para destruir en la infraestructura. Omitiendo ejecución del script Python.\n\n"
-  CHANGES_DETECTED=2  # Hay recursos para destruir
+  CHANGES_DETECTED=1  # Hay recursos para destruir
 elif grep -q "will be updated" "$CLEANED_PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para actualizar en la infraestructura. Omitiendo ejecución del script Python.\n\n"
-  CHANGES_DETECTED=3  # Hay recursos para actualizar
+  CHANGES_DETECTED=1  # Hay recursos para actualizar
 elif grep -q "will be created" "$CLEANED_PLAN_OUTPUT_FILE"; then
   echo -e "\n\nHay recursos para aplicar en la infraestructura. Se iniciará la ejecución del script Python.\n\n"
   CHANGES_DETECTED=1  # Hay recursos para aplicar
